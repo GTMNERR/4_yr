@@ -18,7 +18,7 @@ library(kableExtra)
 
 # ----01 LOAD read in tolomato met file ----
 
-met_dat <- read_xlsx(here::here("data", "TOLO", "tolomatoJuly17_Mar22.xlsx")) %>%
+met_dat <- read_xlsx(here::here("data", "TOLO", "tolomatoJuly17_Dec20.xlsx")) %>%
   janitor::clean_names()
 
 # inspect the data file
@@ -71,16 +71,55 @@ met_dat_monthly$datetime <- paste(met_dat_monthly$year, met_dat_monthly$month,
 
 
 
-# trying to change the monthly to the actual month and not 12345....---
+
+## read in rainfall data from GTM collection to merge
+
+gtm_rain <- read_xlsx(here::here("data", "TOLO", "gtmrainfall.xlsx")) %>%
+  janitor::clean_names()
 
 
+### Creating a column with the month abb name not just numbers 
+gtm_rain <- gtm_rain%>%
+  mutate(month1 = (month.abb[month]))
+
+met_dat_monthly <- met_dat_monthly%>%
+  mutate(month1 = (month.abb[month]))
+
+
+# adding year to the station_code for both rainfall sets 
+
+gtm_rain$uniq <- paste(gtm_rain$month1, gtm_rain$year, sep = "_")
+
+met_dat_monthly$uniq <- paste(met_dat_monthly$month1, met_dat_monthly$year, sep = "_")
+
+
+
+# converting met data year to NUMERIC 
+met_dat_monthly$year <- as.numeric(met_dat_monthly$year)
+
+### joining two datasets by uniq column 
+guana_rain <- dplyr::full_join(met_dat_monthly, gtm_rain)
+
+## converting mm of rain to inches for graphing
+total_rain <- guana_rain %>%
+  mutate(rain_in = monthlyrain/25.4,
+         ID = row_number())
 
 
 # --------- 05 graph by monthly rainfall ---------------
 
-met_dat_monthly %>%
-  ggplot(aes(x = year, y = monthlyrain)) +
-    geom_col()
+total_rain %>%
+  ggplot(aes(x = ID, y = rain_in)) +
+    geom_col()+
+  theme_classic() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme(axis.text = element_text(color = 'black')) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1.0, color='black')) +
+  labs(y = "Monthly Rainfall (in)",
+       x = "")
+
+  
+  
 
 
 

@@ -2,6 +2,11 @@
 ##filter() you'll change it to site_acronym == site which will then make your variable input 
 ##whatever site you want to select using the inputs from the site acronym column.
 
+
+
+#01---------------BAR CHART BY SITE OVER TIME --------------------
+
+
 ## have to use sitez because site plots blank because site is already a column in data set!  
 
 sites <- function(param, sitez, axis_title) {
@@ -13,18 +18,17 @@ sites <- function(param, sitez, axis_title) {
     dplyr::filter(component_short == param &
                     end == "N" &
                     site_acronym == sitez) %>%
-    ggplot(aes(x = date_sampled, y = result, color = site_friendly)) +
-    geom_point(size = 3) +
-    geom_line(size = 1) +
-    scale_colour_manual(name = "Site", values = sitecolours) +
-    cowplot::theme_cowplot() +
+    ggplot(aes(x = date_sampled, y = result, fill = site_friendly)) +
+    geom_col() +
+    scale_colour_manual(values = sitecolours) +
     scale_y_continuous(expand = c(0,0)) +
-    scale_x_datetime(date_breaks = '1 month', date_minor_breaks = '2 weeks', date_labels='%b-%y') +
-    theme(axis.text.x = element_text(angle = 90, vjust=0.3, size=12, color='black')) +
+    scale_x_datetime(date_breaks = '1 year', date_labels='%Y') +
+    cowplot::theme_cowplot() + 
+    theme(axis.text.x = element_text(vjust=0.3, size=12, color='black'),
+          legend.title = element_blank()) +
+    #guide = guide_legend(override.aes = list(name = "Site")) +
     labs(y = axis_title,
-         x = "",
-         title = paste(param),
-	   subtitle = paste(sitez))
+         x = "")
 	   
 
 	p
@@ -33,9 +37,10 @@ sites <- function(param, sitez, axis_title) {
 
 
 sites('TN', 'MK', 'Total Nitrogen')
+sites('TN', 'LM', 'Total Nitrogen')
 
 
- --------------- site specific with threshold ------------------------
+#02 --------------- site specific bar chart with threshold ------------------------
 
   sites_thres <- function(param, sitez, threshold, axis_title) {
     # param - use component_short parameter name in quotes
@@ -73,7 +78,7 @@ sites_thres("DO_P", "LM", 42, "Dissolved Oxygen %")
 
 
 
---------------- site specific with lm or stats ---------------
+#03--------------- site specific with lm or stats ---------------
 ## 
 ## have to use sitez because site plots blank because site is already a column in data set!  
   
@@ -116,5 +121,40 @@ sites_thres("DO_P", "LM", 42, "Dissolved Oxygen %")
   }
 
 sites_stat("CHLA_C", 'GR', "Chlora")
+
+
+
+
+#04 -------------SITE SPECIFIC BOXPLOTS --------------------------
+
+
+boxplot_all_sites <- function(param, axis_title) {
+  # param - use component_short parameter name in quotes
+  # axis_title - use axis title value from 00_vis_custom.R, no quotes
+  
+  p <- dat2 %>%
+    dplyr::filter(component_short == param & end == "N") %>%
+    ggplot(aes(x = site_friendly, y = result, fill = site_friendly)) +
+    geom_boxplot(alpha = 0.8) +
+    scale_fill_manual(name = "Site", values = sitecolours) +
+    cowplot::theme_cowplot() +
+    scale_y_continuous(expand = c(0,0)) +
+    theme(axis.text.x = element_text(size=12, color='black'),
+          legend.position = "none") +
+    scale_x_discrete(labels = c("Micklers",
+                                "GL1",
+                                "GL2",
+                                "Lake\nMiddle",
+                                "GL4",
+                                "Lake\nSouth",
+                                "River\nNorth",
+                                "GR1",
+                                "Guana\nRiver",
+                                "GR3")) +
+    labs(y = axis_title,
+         x = "")
+  
+  p
+}
 
     

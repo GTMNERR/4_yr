@@ -19,7 +19,7 @@ entero_dat <- dat2 %>%
   filter(component_short == 'ENTERO')
 
 
-##plotting fxn
+##plotting fxn for overlay of specific month of entero data 
 
 boxplot <- ggplot(data = entero_dat, 
                   aes(x = site, y = result)) +
@@ -28,8 +28,12 @@ boxplot <- ggplot(data = entero_dat,
   geom_point(data = filter(entero_dat, month == 3 & year == 2022), 
              aes(color = "Mar 2022"),
              size = 4) +
+  geom_point(data = filter(entero_dat, month == 4 & year == 2022),
+             aes(color = "Apr 2022"),
+             size = 4) +
   scale_color_manual(name = "", 
-                     values = c("Mar 2022" = "red")) +
+                     values = c("Mar 2022" = "red",
+                                "Apr 2022" = "yellow")) +
   scale_fill_manual(name = "",
                     values = c("2017-2021" = "white")) +
   theme_classic() +
@@ -47,3 +51,4 @@ boxplot <- ggplot(data = entero_dat,
                               "GR3")) +
   labs(x = '',
        y = "Enterococuss MPN/100mL")
+

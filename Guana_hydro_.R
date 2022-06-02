@@ -4,6 +4,11 @@ all_sites_discharge <- function(param, axis_title) {
   # param - use component_short parameter name in quotes
   # axis_title - use axis title value from 00_vis_custom.R, no quotes, or new title in quotes.
   
+  #dark grey discharge light grey recharge
+  # red lines are gates solid
+  #solid lines are drawdown 
+  #dashed lines are damn closure 
+  
   p <- dat2 %>%
     dplyr::filter(component_short == param & end == "N") %>%
     ggplot(aes(x = date_sampled, y = result, color = site_friendly)) +

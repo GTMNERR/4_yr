@@ -13,8 +13,8 @@ p <- dat2 %>%
     scale_colour_manual(name = "Site", values = sitecolours) +
     cowplot::theme_cowplot() +
     scale_y_continuous(expand = c(0,0)) +
-    scale_x_datetime(date_breaks = '1 month', date_minor_breaks = '2 weeks', date_labels='%b-%y') +
-    theme(axis.text.x = element_text(angle = 90, vjust=0.3, size=12, color='black')) +
+    #scale_x_datetime(date_breaks = '1 month', date_minor_breaks = '2 weeks', date_labels='%b-%y') +
+    #theme(axis.text.x = element_text(angle = 90, vjust=0.3, size=12, color='black')) +
     labs(y = axis_title,
          x = "",
          title = paste(param))
@@ -30,7 +30,10 @@ all_sites("TN", nitro_y_title) # total nitrogen (this may be incomplete because 
 all_sites("ENTERO", entero_y_title) # enterococcus
 all_sites("FECCOL", fecal_y_title) # fecal coliform
 all_sites("DO", "Dissolved Oxygen")
-all_sites("WTEM", "Temperature")
+all_sites("TURBIDITY", "Turbidity")
+all_sites("WTEM", "Temperature") +
+  scale_x_datetime(date_breaks = 'year', date_labels = '%Y') +
+  theme(axis.text.x = element_text(angle = 0, vjust=0.3, size=12, color='black'))
 
 # ---- 01a EXAMPLES of how to further customize -----------------------------------
 
@@ -195,6 +198,7 @@ wbid_sites_threshold <- function(param, lake_threshold, river_threshold, axis_ti
 # ---- 02a EXAMPLES -----------------------------------
 
 wbid_sites("DO", wbid = "Lake", "Dissolved Oxygen mg/L")
+wbid_sites("ENTERO", wbid = "Lake", "Enterocucuss")
 
 
 wbid_sites_threshold("CHLA_C", 11, 6.6, chla_y_title)
@@ -250,12 +254,15 @@ DO <- boxplot_all_sites("DO", "Dissolved Oxygen mg/L") +
        geom_hline(yintercept = 2) 
 dop <- boxplot_all_sites("DO_P", "Dissolved Oxygen %")
 
+ent <- boxplot_all_sites("ENTERO", "Enterocucuss")
+
 PHO <- boxplot_all_sites("TP", "Total Phosphorous") +
     coord_cartesian(ylim = c(0,1))
   
     ggsave(plot = PHO, filename = here("output", "PHO_box.png"), dpi = 120)
   
-n <- boxplot_all_sites("TN", "Total Nitrogen mg/L")
+n <- boxplot_all_sites("TN", "Total Nitrogen mg/L") +
+      coord_cartesian(ylim = c(0 , 9))
 
   boxplot_all_sites("NO23F", "Nitrate+Nitrite")
   boxplot_all_sites("WTEM", "Temperature")
@@ -342,6 +349,9 @@ boxplot_wbid("CHLA_C", chla_y_title)
 
 # or different parameters without designated title
 boxplot_wbid("SALT", "Salinity (psu)")
+
+
+
 
 
 
