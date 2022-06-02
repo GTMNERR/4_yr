@@ -29,7 +29,7 @@ here::here('data')
 ## of the right hand side of the operator
 
 ##WORKS
-dat <- readxl::read_xlsx(here::here('data', 'Guana_masterdata_2022.04.06.xlsx'), 
+dat <- readxl::read_xlsx(here::here('data', 'Guana_masterdata_2022.04.26.xlsx'), 
                         sheet = 'Sheet1') %>% 
   janitor::clean_names()
 
@@ -59,7 +59,7 @@ dat2 <- dat %>%
                 result,
                 remark,
                 flag) %>%
-  dplyr::filter(!(component_short %in% c("WIND_D", "SECCHI"))) %>% # remove wind direction and secchi
+  dplyr::filter(!(component_short %in% c("WIND_D", "SECCHI"))) %>% # remove ALL BUT wind direction and secchi
   dplyr::mutate(component_long = toupper(component_long),
                 component_short = toupper(component_short))
 
