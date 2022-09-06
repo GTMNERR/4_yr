@@ -22,7 +22,7 @@ entero_dat <- dat2 %>%
 ##plotting fxn for overlay of specific month of entero data 
 
 boxplot <- ggplot(data = entero_dat, 
-                  aes(x = site, y = result)) +
+                  aes(x = site_friendly, y = result)) +
   geom_boxplot(data = filter(entero_dat, year < "2022"), 
                aes(fill = "2017-2021")) +
   geom_point(data = filter(entero_dat, month == 3 & year == 2022), 
@@ -52,3 +52,6 @@ boxplot <- ggplot(data = entero_dat,
   labs(x = '',
        y = "Enterococuss MPN/100mL")
 
+ggplotly(boxplot)
+
+ggsave(plot = boxplot, filename = here("output", "EnteroSpikes.png"), dpi = 120)

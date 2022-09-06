@@ -20,12 +20,12 @@ sites <- function(param, sitez, axis_title) {
                     site_acronym == sitez) %>%
     ggplot(aes(x = date_sampled, y = result, fill = site_friendly)) +
     geom_col() +
-    scale_colour_manual(values = sitecolours) +
+    scale_fill_manual(values = sitecolours) +
     scale_y_continuous(expand = c(0,0)) +
     scale_x_datetime(date_breaks = '1 year', date_labels='%Y') +
     cowplot::theme_cowplot() + 
     theme(axis.text.x = element_text(vjust=0.3, size=12, color='black'),
-          legend.title = element_blank()) +
+          legend.title = element_blank(), legend.position = "none") +
     #guide = guide_legend(override.aes = list(name = "Site")) +
     labs(y = axis_title,
          x = "")
@@ -36,9 +36,18 @@ sites <- function(param, sitez, axis_title) {
 }
 
 
-sites('TN', 'MK', 'Total Nitrogen')
-sites('TN', 'LM', 'Total Nitrogen')
+GR1 <- sites('DO', 'GL1', "Dissolved Oxygen") +
+        geom_col(width = 0.1)
+    #scale_y_continuous(breaks = c(0.0, 0.02, 0.04,0.06, 0.08, 0.1)) +
+    coord_cartesian(ylim = c(-0.5 , 0.5)) +
+      labs (subtitle = paste("GR1"))
 
+
+x <- sites('ENTERO', 'MK', "Enterococcus MPN/100mL") +
+      labs (subtitle = paste ("MK"))
+  
+
+ggsave(plot = x, filename = here("output", "GR3_ENTERO.png"), dpi = 120)
 
 #02 --------------- site specific bar chart with threshold ------------------------
 
@@ -127,8 +136,9 @@ sites_stat("CHLA_C", 'GR', "Chlora")
 
 #04 -------------SITE SPECIFIC BOXPLOTS --------------------------
 
+### NEEDS WORK THIS IS JUST ALL SITES BOXPLOT 
 
-boxplot_all_sites <- function(param, axis_title) {
+boxplot_all_sites <- function(param, site, axis_title) {
   # param - use component_short parameter name in quotes
   # axis_title - use axis title value from 00_vis_custom.R, no quotes
   
@@ -158,3 +168,30 @@ boxplot_all_sites <- function(param, axis_title) {
 }
 
     
+
+boxplot_all_sites("DO", "Dissolved Osygen")
+
+
+# 05 -------------All sites bar chart over time --------------
+
+all_sites_bar <- function(param, axis_title) {
+  # param - use component_short parameter name in quotes
+  # axis_title - use axis title value from 00_vis_custom.R, no quotes, or new title in quotes.
+  
+  p <- dat2 %>%
+    dplyr::filter(component_short == param & end == "N") %>%
+    ggplot(aes(x = date_sampled, y = result, color = site_friendly)) +
+    geom_col() +
+    scale_color_manual(name = "Site", values = sitecolours) +
+    cowplot::theme_cowplot() +
+    scale_y_continuous(expand = c(0,0)) +
+    #scale_x_datetime(date_breaks = '1 month', date_minor_breaks = '2 weeks', date_labels='%b-%y') +
+    #theme(axis.text.x = element_text(angle = 90, vjust=0.3, size=12, color='black')) +
+    labs(y = axis_title,
+         x = "",
+         title = paste(param))
+  
+  p
+}
+
+all_sites_bar("ENTERO", "Enterococuss")
