@@ -1,4 +1,6 @@
-install.packages()
+install.packages(readxl, janitor, here, tidyverse, lubridate, broom, knitr, rmarkdown, cowplot, gridExtra, patchwork, scales, plotly, ggcorrplot, kableExtra)
+install.packages(readxl)
+install.packages(ggpubr)
 ## Select readxl, janitor, here, tidyverse, lubridate, broom, knitr, rmarkdown, cowplot, gridExtra, 
 ## patchwork, scales, plotly, ggcorrplot
 ## Dir refers to the directory name you'd like to work from
@@ -6,7 +8,6 @@ install.packages()
 
 ## setwd('C:/Users/roorbach_o/Documents/R/win-library/4.0')
 library(readxl)
-library(janitor)
 library(here)
 library(tidyverse)
 library(lubridate)
@@ -20,6 +21,7 @@ library(scales)
 library(plotly)
 library(ggcorrplot)
 library(kableExtra) 
+library(ggpubr)
 
 ## ???
 here::here('data')
@@ -29,7 +31,7 @@ here::here('data')
 ## of the right hand side of the operator
 
 ##WORKS
-dat <- readxl::read_xlsx(here::here('data', 'Guana_masterdata_2022.04.26.xlsx'), 
+dat <- readxl::read_xlsx(here::here('data', 'Guana_masterdata_2022.06.21.xlsx'), 
                         sheet = 'Sheet1') %>% 
   janitor::clean_names()
 
@@ -73,7 +75,7 @@ unique(dat2$component_short) # will pull out all the unique component names
 unique(dat2$component_long) # will pull out the unique component names
 
 ##check for duplicates
-janitor::get_dupes(dat2)
+datdup <- janitor::get_dupes(dat2)
 
 ##check dat for NA or BLANKS ?? I have quite a few??
 View(dat2 %>% dplyr::filter(is.na(result)))
@@ -119,7 +121,13 @@ dat2 <- dat2 %>%
 
 
 #remove bad data - flagged data
+
 dat2 <- dat2 %>% dplyr::filter(!grepl("-3", flag))
+dat2 <- dat2 %>% dplyr::filter(!grepl("GTMGL1.5NUT", station_code))
+dat2 <- dat2 %>% dplyr::filter(!grepl("GTMGL2.5NUT", station_code))
+dat2 <- dat2 %>% dplyr::filter(!grepl("GTMGL3.5NUT", station_code))
+
+dat2 <- dat2 %>% dplyr::filter(result != "NA")
 
 
 

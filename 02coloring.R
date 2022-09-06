@@ -45,3 +45,15 @@ sitecolours2 <- c(
 )
 # create a site specific color palette??
 
+
+depcolours <- c(
+  `GL1` = "#D89000",
+  `GL2` = "#A3A500",
+  `Lake Middle` = "#39B600",
+  `GL4` = "#00BF7D",
+  `GR1` = "#9590FF",
+  `Guana River` = "#E76BF3",
+  `GR3` = "#FF62BC"
+)
+
+
