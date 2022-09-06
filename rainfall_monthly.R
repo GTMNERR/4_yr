@@ -93,12 +93,15 @@ gtm_rain$uniq <- paste(gtm_rain$month1, gtm_rain$year, sep = "_")
 met_dat_monthly$uniq <- paste(met_dat_monthly$month1, met_dat_monthly$year, sep = "_")
 
 
-
 # converting met data year to NUMERIC 
 met_dat_monthly$year <- as.numeric(met_dat_monthly$year)
 
+#removing 2020 from TOLO data
+met_dat_new <- met_dat_daily %>% dplyr::filter(year != "2020")
+
 ### joining two datasets by uniq column 
 guana_rain <- dplyr::full_join(met_dat_monthly, gtm_rain)
+
 
 ## converting mm of rain to inches for graphing
 total_rain <- guana_rain %>%
@@ -108,8 +111,8 @@ total_rain <- guana_rain %>%
 
 # --------- 05 graph by monthly rainfall ---------------
 
-total_rain %>%
-  ggplot(aes(x = ID, y = rain_in)) +
+x <- total_rain %>%
+  ggplot(aes(x = datetime, y = rain_in)) +
     geom_col()+
   theme_classic() +
   scale_y_continuous(expand = c(0,0)) +
@@ -118,7 +121,24 @@ total_rain %>%
   labs(y = "Monthly Rainfall (in)",
        x = "")
 
-  
+
+ggsave(plot = x, filename = here("output", "Rain_bar.png"), dpi = 120)
+
+
+##using only GTM rainfall data
+
+y<-gtm_rain %>%
+  ggplot(aes(x = datetime, y = monthlyrain_in)) +
+  geom_col()+
+  theme_classic() +
+  scale_y_continuous(expand = c(0,0)) +
+  theme(axis.text = element_text(color = 'black')) +
+  theme(axis.text.x = element_text( color='black')) +
+  labs(y = "Monthly Rainfall (in)",
+       x = "")
+
+ggsave(plot = y, filename = here("output", "GTMRain_bar.png"), dpi = 120)
+
   
 
 
