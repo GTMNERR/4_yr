@@ -86,3 +86,7 @@ ggplot() +
        x = "Site (North to South)") 
   ggsave(p, filename = here('output', 'po4_boxplot.png'), units = "in")
 rm(p)
+
+# SALT
+plot2(param = "SALT", axis_title = "Salinity (psu)") %>% 
+  ggsave(filename = here('output', 'sal_boxplot.png'), units = "in")
