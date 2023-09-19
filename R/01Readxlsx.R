@@ -77,10 +77,7 @@ dat2 <- dat2 %>% dplyr::filter(result != "NA")
 ##rewrite data2, formatting time and sample and char
 
 dat2 <- dat2 %>%
-  dplyr::mutate(date_sampled = as.POSIXct(date_sampled,
-                                          format = "%m/%d/%Y %H:%M",
-                                          tz = 'America/Regina'),
-                result = as.numeric(result),
+  dplyr::mutate(result = as.numeric(result),
                 month = month(date_sampled),
                 day = day(date_sampled),
                 year = as.character(year(date_sampled)), # set year as a character
