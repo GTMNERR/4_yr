@@ -102,7 +102,18 @@ dat2 <- dat2 %>%
                                                   "River North",
                                                   "GR1",
                                                   "Guana River",
-                                                  "GR3"))
+                                                  "GR3")),
+                site_acronym = factor(site_acronym,
+                                      levels = c("MK",
+                                                 "GL1",
+                                                 "GL2",
+                                                 "LM",
+                                                 "GL4",
+                                                 "LS",
+                                                 "RN",
+                                                 "GR1",
+                                                 "GR",
+                                                 "GR3"))
                 )
 
 
